@@ -1,0 +1,971 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#641d37">
+<title>Dhanushka & Sawmiya | Wedding Planner</title>
+<style>
+:root {
+  --wine:#641d37;
+  --wine2:#8e3454;
+  --gold:#d5ad62;
+  --cream:#fffaf5;
+  --ink:#392b30;
+  --muted:#88777c;
+  --line:#eee2e4;
+  --green:#27765b;
+  --shadow:0 10px 30px rgba(65,27,42,.08);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  padding:18px;
+  background:#f7f1ef;
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
+}
+.app { max-width:1200px; margin:auto; }
+.hero {
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  padding:42px 18px 35px;
+  color:white;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 10% 15%,rgba(255,255,255,.16),transparent 24%),
+    radial-gradient(circle at 90% 85%,rgba(213,173,98,.22),transparent 25%),
+    linear-gradient(135deg,#4c172d,#853b55);
+  box-shadow:var(--shadow);
+}
+.hero:before,.hero:after {
+  content:"✿";
+  position:absolute;
+  color:rgba(255,255,255,.15);
+  font-size:100px;
+}
+.hero:before { left:15px; top:0; }
+.hero:after { right:15px; bottom:-15px; }
+.eyebrow {
+  color:#f1d69f;
+  text-transform:uppercase;
+  letter-spacing:4px;
+  font-size:11px;
+}
+.hero h1 {
+  font-family:Georgia,serif;
+  font-weight:normal;
+  font-size:clamp(34px,7vw,58px);
+  margin:14px 0 8px;
+}
+.hero .amp { color:#f1d69f; font-style:italic; }
+.hero p { margin:8px 0; color:#f8e9e8; }
+.hero .date { font-size:17px; font-weight:bold; margin-top:18px; }
+.ornament { color:#e8c982; font-size:23px; margin:8px; }
+.info-strip {
+  display:flex;
+  justify-content:center;
+  gap:22px;
+  flex-wrap:wrap;
+  margin-top:15px;
+  font-size:13px;
+}
+.info-strip span { color:#f8e9e8; }
+
+.tabs {
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:15px 0;
+}
+.tab {
+  border:1px solid var(--line);
+  background:white;
+  color:var(--wine);
+  border-radius:30px;
+  padding:11px 18px;
+  font-weight:bold;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.tab.active { background:var(--wine); color:white; border-color:var(--wine); }
+.panel { display:none; }
+.panel.active { display:block; }
+
+.cards {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:16px;
+}
+.card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:17px;
+  box-shadow:var(--shadow);
+  min-width:0;
+}
+.card small { color:var(--muted); display:block; margin-bottom:9px; }
+.card strong { color:var(--wine); font-size:clamp(17px,2.5vw,24px); overflow-wrap:anywhere; }
+.card .symbol { font-size:19px; margin-bottom:8px; }
+
+.section {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+.section h2 {
+  color:var(--wine);
+  font-family:Georgia,serif;
+  font-weight:normal;
+  margin:0 0 15px;
+}
+.chart-layout {
+  display:grid;
+  grid-template-columns:minmax(180px,280px) 1fr;
+  align-items:center;
+  gap:25px;
+}
+.donut-wrap { display:flex; justify-content:center; }
+.donut {
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  background:conic-gradient(#641d37 0% 100%);
+  position:relative;
+  display:grid;
+  place-items:center;
+}
+.donut:after {
+  content:"";
+  position:absolute;
+  width:62%;
+  height:62%;
+  background:white;
+  border-radius:50%;
+}
+.donut-label {
+  position:relative;
+  z-index:1;
+  text-align:center;
+  padding:8px;
+}
+.donut-label small { display:block; color:var(--muted); }
+.donut-label strong { display:block; color:var(--wine); font-size:17px; margin-top:5px; }
+.legend { display:grid; gap:10px; }
+.legend-row {
+  display:grid;
+  grid-template-columns:12px minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  font-size:13px;
+}
+.dot { width:11px; height:11px; border-radius:3px; }
+.legend-row b { color:var(--wine); white-space:nowrap; }
+.muted { color:var(--muted); font-size:13px; }
+
+.toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+}
+button.action {
+  border:0;
+  background:var(--wine);
+  color:white;
+  border-radius:9px;
+  padding:11px 15px;
+  cursor:pointer;
+  font-weight:bold;
+}
+button.action.secondary { background:#77656c; }
+button.action.gold { background:#a77c36; }
+button.action.danger { background:#a43d45; }
+.category-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.category-heading span { min-width:0; }
+button.add-subitem {
+  flex:0 0 auto;
+  border:0;
+  border-radius:8px;
+  background:var(--wine);
+  color:white;
+  padding:8px 11px;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.delete-subitem {
+  border:1px solid #e7c6ca;
+  border-radius:7px;
+  background:#fff3f3;
+  color:#a43d45;
+  padding:7px 10px;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.new-subitem-form {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:9px;
+}
+.new-subitem-input {
+  flex:1 1 240px;
+  min-width:160px;
+  max-width:440px;
+  padding:10px;
+  border:1px solid #e2d5d8;
+  border-radius:8px;
+  font:inherit;
+}
+button.save-subitem {
+  border:0;
+  border-radius:8px;
+  background:var(--green);
+  color:white;
+  padding:9px 13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.cancel-subitem {
+  border:1px solid #ddd;
+  border-radius:8px;
+  background:white;
+  color:var(--ink);
+  padding:9px 13px;
+  cursor:pointer;
+}
+button:focus-visible,input:focus-visible {
+  outline:3px solid rgba(213,173,98,.5);
+  outline-offset:2px;
+}
+.table-wrap {
+  width:100%;
+  overflow-x:auto;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+table {
+  width:100%;
+  min-width:930px;
+  border-collapse:collapse;
+  background:white;
+  font-size:13px;
+}
+th {
+  position:sticky;
+  top:0;
+  background:var(--wine);
+  color:white;
+  padding:13px 10px;
+  text-align:right;
+  white-space:nowrap;
+}
+th:first-child { text-align:left; }
+th:last-child, td:last-child { text-align:center; }
+td { border-bottom:1px solid var(--line); padding:10px; text-align:right; }
+td:first-child { text-align:left; }
+tr.category td {
+  background:#f8eef1;
+  color:var(--wine);
+  font-weight:bold;
+  padding:12px 10px;
+}
+tr.subtotal td { background:#fbf8f6; font-weight:bold; }
+tr.grand td {
+  background:var(--wine);
+  color:white;
+  font-weight:bold;
+  font-size:14px;
+}
+.money {
+  width:125px;
+  max-width:100%;
+  padding:9px 7px;
+  border:1px solid #e2d5d8;
+  border-radius:7px;
+  text-align:right;
+  font-size:14px;
+  color:var(--ink);
+  background:#fffdfc;
+}
+.status { color:var(--green); font-size:12px; margin-left:8px; }
+.progress {
+  height:9px;
+  background:#f1e8e9;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:7px;
+}
+.progress span { display:block; height:100%; border-radius:20px; background:var(--gold); }
+.analysis-row { margin:18px 0; }
+.analysis-head {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:14px;
+}
+.backup-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.backup-box {
+  padding:20px;
+  background:var(--cream);
+  border:1px solid var(--line);
+  border-radius:13px;
+}
+.backup-box h3 { color:var(--wine); margin-top:0; }
+input[type=file] { max-width:100%; }
+.footer {
+  text-align:center;
+  padding:22px 10px;
+  color:var(--muted);
+  font-family:Georgia,serif;
+}
+@media(max-width:760px) {
+  body { padding:9px; }
+  .hero { border-radius:16px; padding:32px 12px; }
+  .hero:before,.hero:after { font-size:65px; }
+  .cards { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+  .card { padding:13px; }
+  .section { padding:14px; }
+  .chart-layout { grid-template-columns:1fr; gap:18px; }
+  .donut { width:205px; height:205px; }
+  .backup-grid { grid-template-columns:1fr; }
+  .tabs { padding:12px 0; }
+  .tab { padding:10px 14px; font-size:13px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="hero">
+  <div class="eyebrow">Our Wedding Celebration</div>
+  <div class="ornament">❧ ✦ ❧</div>
+  <h1>Dhanushka <span class="amp">&</span> Sawmiya</h1>
+  <p>Two hearts · One beautiful beginning</p>
+  <div class="date">15 MAY 2027</div>
+  <div class="info-strip">
+    <span>♡ Kurunegala, Sri Lanka</span>
+    <span>♡ Wedding Budget Planner</span>
+  </div>
+  <div class="ornament">❧ ✦ ❧</div>
+</header>
+
+<nav class="tabs" aria-label="Planner sections">
+  <button class="tab active" data-tab="dashboard">Overview</button>
+  <button class="tab" data-tab="budget">Budget Details</button>
+  <button class="tab" data-tab="analysis">Analysis</button>
+  <button class="tab" data-tab="backup">Backup & Settings</button>
+</nav>
+
+<section class="panel active" id="dashboard">
+  <div class="cards">
+    <div class="card"><div class="symbol">💍</div><small>Estimated Budget</small><strong id="kEst">LKR 0</strong></div>
+    <div class="card"><div class="symbol">🧾</div><small>Actual Expenses</small><strong id="kAct">LKR 0</strong></div>
+    <div class="card"><div class="symbol">💚</div><small>Amount Paid</small><strong id="kPaid">LKR 0</strong></div>
+    <div class="card"><div class="symbol">⏳</div><small>Balance to Pay</small><strong id="kBalance">LKR 0</strong></div>
+  </div>
+
+  <div class="section">
+    <h2>Wedding Budget Allocation</h2>
+    <p class="muted">Estimated spending by category. Values and percentages update when you edit the budget.</p>
+    <div class="chart-layout">
+      <div class="donut-wrap">
+        <div class="donut" id="donut">
+          <div class="donut-label"><small>Total Estimate</small><strong id="donutTotal">LKR 0</strong></div>
+        </div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>Wedding Planning Note</h2>
+    <p class="muted">Keep estimated costs, actual expenses and payments updated in Budget Details. Export a backup regularly, especially before changing phones or browsers.</p>
+  </div>
+</section>
+
+<section class="panel" id="budget">
+  <div class="section">
+    <div class="toolbar">
+      <div>
+        <h2 style="margin:0">Wedding Expense Tracker</h2>
+        <span class="muted">All amounts in Sri Lankan Rupees (LKR)</span>
+        <span class="status" id="saveStatus" aria-live="polite"></span>
+      </div>
+      <button class="action gold" onclick="exportData()">⬇ Export Backup</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Category / Item</th>
+            <th>Estimated (LKR)</th>
+            <th>Actual (LKR)</th>
+            <th>Variance (LKR)</th>
+            <th>Paid (LKR)</th>
+            <th>Balance (LKR)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <p class="muted">Use <b>+ Add sub-item</b> beside any category to add a new expense. Use <b>Delete</b> to remove an expense. On a phone, swipe the table sideways to see all columns.</p>
+  </div>
+</section>
+
+<section class="panel" id="analysis">
+  <div class="section">
+    <h2>Category Analysis</h2>
+    <p class="muted">Estimated cost and share of the overall wedding budget.</p>
+    <div id="analysisList"></div>
+  </div>
+</section>
+
+<section class="panel" id="backup">
+  <div class="section">
+    <h2>Backup & Settings</h2>
+    <div class="backup-grid">
+      <div class="backup-box">
+        <h3>Download a Backup</h3>
+        <p class="muted">Save all your current estimates, actual expenses and payment details as a JSON file.</p>
+        <button class="action" onclick="exportData()">Download Backup</button>
+      </div>
+      <div class="backup-box">
+        <h3>Restore a Backup</h3>
+        <p class="muted">Choose a previous wedding budget backup file to restore your information.</p>
+        <input type="file" id="importFile" accept=".json,application/json">
+        <br><br>
+        <button class="action gold" onclick="importData()">Import Backup</button>
+      </div>
+      <div class="backup-box">
+        <h3>Reset Budget</h3>
+        <p class="muted">Restore the original estimated budget. This will remove your current edits from this browser.</p>
+        <button class="action danger" onclick="resetDefaults()">Reset to Defaults</button>
+      </div>
+      <div class="backup-box">
+        <h3>Wedding Details</h3>
+        <p><b>Couple:</b> Dhanushka & Sawmiya</p>
+        <p><b>Date:</b> 15 May 2027</p>
+        <p><b>Venue area:</b> Kurunegala, Sri Lanka</p>
+        <p><b>Currency:</b> LKR</p>
+      </div>
+    </div>
+    <p class="muted" id="storageNotice" aria-live="polite"></p>
+  </div>
+</section>
+
+<footer class="footer">
+  Made with love for Dhanushka & Sawmiya ♡
+</footer>
+</div>
+
+<script>
+"use strict";
+
+const KEY = "dhanushka_sawmiya_wedding_budget_v2";
+const COLORS = ["#641d37","#d5ad62","#43566c","#b76c72","#518b77","#d18a45","#8070a8"];
+
+const defaultData = [
+  {category:"1. Venue & Catering (The Big Slice)",items:[
+    {id:"v1",name:"Hotel / Banquet Hall Rental (if separate)",est:250000,act:0,paid:0},
+    {id:"v2",name:"Catering / Per Plate Charges (250 guests @ LKR 10,000)",est:2500000,act:0,paid:0},
+    {id:"v3",name:"Additional Beverages & Corkage",est:75000,act:0,paid:0},
+    {id:"v4",name:"Extra Hall Hours / Overtime Charges",est:40000,act:0,paid:0}
+  ]},
+  {category:"2. Cultural Rites & Ceremonial Officiants",items:[
+    {id:"c1",name:"Poruwa Fabrication & Fresh Floral Detailing",est:65000,act:0,paid:0},
+    {id:"c2",name:"Ashtaka & Master of Ceremonies (MC)",est:35000,act:0,paid:0},
+    {id:"c3",name:"Traditional Drummers & Dancers (Magul Bera / Troupe)",est:45000,act:0,paid:0},
+    {id:"c4",name:"Jayamangala Gatha Choir / Girls",est:20000,act:0,paid:0},
+    {id:"c5",name:"Church, Temple, or Nikah Registration / Offerings",est:15000,act:0,paid:0}
+  ]},
+  {category:"3. Attire, Hair & Bridal Dressing",items:[
+    {id:"a1",name:"Main Bridal Saree / Osariya / Gown & Tailoring",est:180000,act:0,paid:0},
+    {id:"a2",name:"Going-Away Outfit (Koora Seere) & Accessories",est:90000,act:0,paid:0},
+    {id:"a3",name:"Groom's Attire (Suit / Nilame Costume & Shoes)",est:75000,act:0,paid:0},
+    {id:"a4",name:"Bridal Dresser Package (Hair, Makeup, Retinue)",est:95000,act:0,paid:0},
+    {id:"a5",name:"Jewelry Purchase / Rental",est:150000,act:0,paid:0}
+  ]},
+  {category:"4. Photography, Video & Entertainment",items:[
+    {id:"p1",name:"Photography & Cinematic Videography Package",est:220000,act:0,paid:0},
+    {id:"p2",name:"Pre-Shoot Session & Drone Coverage",est:50000,act:0,paid:0},
+    {id:"p3",name:"Live Wedding Band or Professional DJ",est:120000,act:0,paid:0},
+    {id:"p4",name:"Reception Compere / Bilingual MC",est:35000,act:0,paid:0}
+  ]},
+  {category:"5. Decoration, Florals & Styling",items:[
+    {id:"d1",name:"Setti Back & Stage Backdrop Styling",est:150000,act:0,paid:0},
+    {id:"d2",name:"Guest Table Centerpieces & Entrance Decor",est:75000,act:0,paid:0},
+    {id:"d3",name:"Bouquets, Boutonnieres & Car Decor",est:45000,act:0,paid:0}
+  ]},
+  {category:"6. Stationery, Cake & Favors",items:[
+    {id:"s1",name:"Wedding Invitations & Printing",est:45000,act:0,paid:0},
+    {id:"s2",name:"Wedding Cake Structure & Guest Box Giveaways",est:120000,act:0,paid:0},
+    {id:"s3",name:"Guest Return Gifts / Souvenirs",est:40000,act:0,paid:0}
+  ]},
+  {category:"7. Transport, Accommodation & Contingency",items:[
+    {id:"t1",name:"Decorated Bridal Car Hire",est:40000,act:0,paid:0},
+    {id:"t2",name:"Guest Shuttle / Bus Transport",est:35000,act:0,paid:0},
+    {id:"t3",name:"Couple's Night Stay / Dressing Room Hotel Room",est:50000,act:0,paid:0},
+    {id:"t4",name:"Emergency Buffer / Contingency (10%)",est:385000,act:0,paid:0}
+  ]}
+];
+
+function cloneDefaults() {
+  return JSON.parse(JSON.stringify(defaultData));
+}
+function number(value) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+function money(value) {
+  return "LKR " + Math.round(number(value)).toLocaleString("en-US");
+}
+function safeLoad() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return cloneDefaults();
+    const parsed = JSON.parse(raw);
+    return validateData(parsed) ? parsed : cloneDefaults();
+  } catch (e) {
+    return cloneDefaults();
+  }
+}
+function validateData(data) {
+  return Array.isArray(data) && data.length > 0 &&
+    data.every(cat => cat && typeof cat.category === "string" &&
+      Array.isArray(cat.items) &&
+      cat.items.every(item => item && typeof item.name === "string"));
+}
+let budgetData = safeLoad();
+
+function saveData() {
+  const status = document.getElementById("saveStatus");
+  try {
+    localStorage.setItem(KEY, JSON.stringify(budgetData));
+    status.textContent = "✓ Saved on this browser";
+    document.getElementById("storageNotice").textContent =
+      "Automatic saving is enabled in this browser. Keep a separate backup file as well.";
+  } catch (e) {
+    status.textContent = "Backup recommended";
+    document.getElementById("storageNotice").textContent =
+      "This browser or embedded page may block local storage. Download a JSON backup to keep your changes.";
+  }
+}
+function categoryStats(cat) {
+  return cat.items.reduce((s,item) => {
+    const est = number(item.est), act = number(item.act), paid = number(item.paid);
+    s.est += est;
+    s.act += act;
+    s.paid += paid;
+    s.balance += (act > 0 ? act : est) - paid;
+    return s;
+  },{est:0,act:0,paid:0,balance:0});
+}
+function allStats() {
+  const cats = budgetData.map(categoryStats);
+  return cats.reduce((s,c) => {
+    s.est += c.est; s.act += c.act; s.paid += c.paid; s.balance += c.balance;
+    return s;
+  },{est:0,act:0,paid:0,balance:0});
+}
+function updateDashboard() {
+  const totals = allStats();
+  document.getElementById("kEst").textContent = money(totals.est);
+  document.getElementById("kAct").textContent = money(totals.act);
+  document.getElementById("kPaid").textContent = money(totals.paid);
+  document.getElementById("kBalance").textContent = money(totals.balance);
+  document.getElementById("donutTotal").textContent = money(totals.est);
+
+  let angle = 0;
+  const slices = [];
+  const legend = document.getElementById("legend");
+  legend.innerHTML = "";
+
+  budgetData.forEach((cat,i) => {
+    const value = categoryStats(cat).est;
+    const pct = totals.est > 0 ? value / totals.est * 100 : 0;
+    const next = angle + pct;
+    slices.push(`${COLORS[i % COLORS.length]} ${angle}% ${next}%`);
+    angle = next;
+
+    const row = document.createElement("div");
+    row.className = "legend-row";
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.background = COLORS[i % COLORS.length];
+    const label = document.createElement("span");
+    label.textContent = cat.category.replace(/^\d+\.\s*/,"");
+    const valueEl = document.createElement("b");
+    valueEl.textContent = `${pct.toFixed(1)}% · ${money(value)}`;
+    row.append(dot,label,valueEl);
+    legend.appendChild(row);
+  });
+  document.getElementById("donut").style.background =
+    totals.est > 0 ? `conic-gradient(${slices.join(",")})` : "#eee";
+}
+function renderBudget() {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+
+  let grand = {est:0,act:0,paid:0,balance:0};
+
+  budgetData.forEach((cat,ci) => {
+    const heading = document.createElement("tr");
+    heading.className = "category";
+    heading.dataset.categoryIndex = ci;
+    const headingCell = document.createElement("td");
+    headingCell.colSpan = 7;
+
+    const headingContent = document.createElement("div");
+    headingContent.className = "category-heading";
+    const categoryName = document.createElement("span");
+    categoryName.textContent = cat.category;
+
+    const addButton = document.createElement("button");
+    addButton.type = "button";
+    addButton.className = "add-subitem";
+    addButton.dataset.action = "add";
+    addButton.dataset.ci = ci;
+    addButton.textContent = "+ Add sub-item";
+    addButton.setAttribute("aria-label", "Add a sub-item to " + cat.category);
+
+    headingContent.append(categoryName,addButton);
+    headingCell.appendChild(headingContent);
+    heading.appendChild(headingCell);
+    tbody.appendChild(heading);
+
+    cat.items.forEach((item,ii) => {
+      const tr = document.createElement("tr");
+      const est = number(item.est), act = number(item.act), paid = number(item.paid);
+      const variance = est - act;
+      const balance = (act > 0 ? act : est) - paid;
+
+      const name = document.createElement("td");
+      name.textContent = item.name;
+      tr.appendChild(name);
+
+      [["est",est],["act",act]].forEach(([field,val]) => {
+        const td = document.createElement("td");
+        const input = document.createElement("input");
+        input.className = "money";
+        input.type = "number";
+        input.min = "0";
+        input.step = "100";
+        input.inputMode = "decimal";
+        input.value = val;
+        input.dataset.ci = ci;
+        input.dataset.ii = ii;
+        input.dataset.field = field;
+        input.setAttribute("aria-label", field === "est" ? "Estimated cost for " + item.name : "Actual cost for " + item.name);
+        td.appendChild(input);
+        tr.appendChild(td);
+      });
+
+      const varianceCell = document.createElement("td");
+      varianceCell.textContent = money(variance);
+      tr.appendChild(varianceCell);
+
+      const paidCell = document.createElement("td");
+      const paidInput = document.createElement("input");
+      paidInput.className = "money";
+      paidInput.type = "number";
+      paidInput.min = "0";
+      paidInput.step = "100";
+      paidInput.inputMode = "decimal";
+      paidInput.value = paid;
+      paidInput.dataset.ci = ci;
+      paidInput.dataset.ii = ii;
+      paidInput.dataset.field = "paid";
+      paidInput.setAttribute("aria-label", "Amount paid for " + item.name);
+      paidCell.appendChild(paidInput);
+      tr.appendChild(paidCell);
+
+      const balanceCell = document.createElement("td");
+      balanceCell.textContent = money(balance);
+      tr.appendChild(balanceCell);
+
+      const actionCell = document.createElement("td");
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "delete-subitem";
+      deleteButton.dataset.action = "delete";
+      deleteButton.dataset.ci = ci;
+      deleteButton.dataset.ii = ii;
+      deleteButton.textContent = "Delete";
+      deleteButton.setAttribute("aria-label", "Delete " + item.name);
+      actionCell.appendChild(deleteButton);
+      tr.appendChild(actionCell);
+
+      tbody.appendChild(tr);
+    });
+
+    const sub = categoryStats(cat);
+    grand.est += sub.est; grand.act += sub.act;
+    grand.paid += sub.paid; grand.balance += sub.balance;
+
+    const subtotal = document.createElement("tr");
+    subtotal.className = "subtotal";
+    const values = [
+      "Category Subtotal",money(sub.est),money(sub.act),
+      money(sub.est-sub.act),money(sub.paid),money(sub.balance),""
+    ];
+    values.forEach(v => {
+      const td = document.createElement("td");
+      td.textContent = v;
+      subtotal.appendChild(td);
+    });
+    tbody.appendChild(subtotal);
+  });
+
+  const totalRow = document.createElement("tr");
+  totalRow.className = "grand";
+  ["GRAND TOTAL",money(grand.est),money(grand.act),
+    money(grand.est-grand.act),money(grand.paid),money(grand.balance),""
+  ].forEach(v => {
+    const td = document.createElement("td");
+    td.textContent = v;
+    totalRow.appendChild(td);
+  });
+  tbody.appendChild(totalRow);
+}
+function renderAnalysis() {
+  const container = document.getElementById("analysisList");
+  container.innerHTML = "";
+  const total = allStats().est;
+
+  budgetData.forEach((cat,i) => {
+    const value = categoryStats(cat).est;
+    const pct = total > 0 ? value / total * 100 : 0;
+    const row = document.createElement("div");
+    row.className = "analysis-row";
+
+    const head = document.createElement("div");
+    head.className = "analysis-head";
+    const name = document.createElement("b");
+    name.textContent = cat.category;
+    const amount = document.createElement("span");
+    amount.textContent = `${money(value)} (${pct.toFixed(1)}%)`;
+    head.append(name,amount);
+
+    const bar = document.createElement("div");
+    bar.className = "progress";
+    const fill = document.createElement("span");
+    fill.style.width = pct + "%";
+    fill.style.background = COLORS[i % COLORS.length];
+    bar.appendChild(fill);
+    row.append(head,bar);
+    container.appendChild(row);
+  });
+}
+function renderAll() {
+  renderBudget();
+  updateDashboard();
+  renderAnalysis();
+}
+document.getElementById("tableBody").addEventListener("click",event => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  const ci = Number(button.dataset.ci);
+  if (!Number.isInteger(ci) || !budgetData[ci]) return;
+
+  if (button.dataset.action === "add") {
+    // Show an inline form instead of a browser prompt; this works more reliably in embeds.
+    const existingForm = document.querySelector(".new-subitem-form-row");
+    if (existingForm) existingForm.remove();
+
+    const categoryHeading = document.querySelector(
+      'tr.category[data-category-index="' + ci + '"]'
+    );
+    if (!categoryHeading) return;
+
+    const formRow = document.createElement("tr");
+    formRow.className = "new-subitem-form-row";
+    const formCell = document.createElement("td");
+    formCell.colSpan = 7;
+
+    const form = document.createElement("form");
+    form.className = "new-subitem-form";
+    form.dataset.ci = ci;
+
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.className = "new-subitem-input";
+    nameInput.placeholder = "Enter new expense name";
+    nameInput.maxLength = 120;
+    nameInput.required = true;
+    nameInput.setAttribute("aria-label", "New expense name");
+
+    const saveButton = document.createElement("button");
+    saveButton.type = "submit";
+    saveButton.className = "save-subitem";
+    saveButton.textContent = "Save item";
+
+    const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
+    cancelButton.className = "cancel-subitem";
+    cancelButton.dataset.action = "cancel-add";
+    cancelButton.textContent = "Cancel";
+
+    form.append(nameInput,saveButton,cancelButton);
+    formCell.appendChild(form);
+    formRow.appendChild(formCell);
+    categoryHeading.after(formRow);
+    nameInput.focus();
+    return;
+  }
+
+  if (button.dataset.action === "cancel-add") {
+    const row = button.closest("tr");
+    if (row) row.remove();
+    return;
+  }
+
+  if (button.dataset.action === "delete") {
+    const ii = Number(button.dataset.ii);
+    const item = budgetData[ci].items[ii];
+    if (!item) return;
+    if (!confirm('Delete the sub-item "' + item.name + '"?')) return;
+    budgetData[ci].items.splice(ii,1);
+    saveData();
+    renderAll();
+  }
+});
+
+document.getElementById("tableBody").addEventListener("submit",event => {
+  const form = event.target.closest("form.new-subitem-form");
+  if (!form) return;
+  event.preventDefault();
+
+  const ci = Number(form.dataset.ci);
+  if (!Number.isInteger(ci) || !budgetData[ci]) return;
+  const input = form.querySelector("input.new-subitem-input");
+  const itemName = input ? input.value.trim() : "";
+  if (!itemName) {
+    if (input) input.focus();
+    return;
+  }
+
+  budgetData[ci].items.push({
+    id:"custom_" + Date.now() + "_" + Math.floor(Math.random() * 100000),
+    name:itemName,
+    est:0,
+    act:0,
+    paid:0
+  });
+  saveData();
+  renderAll();
+});
+
+document.getElementById("tableBody").addEventListener("change",event => {
+  const input = event.target;
+  if (!input.matches("input[data-ci]")) return;
+  const ci = Number(input.dataset.ci);
+  const ii = Number(input.dataset.ii);
+  const field = input.dataset.field;
+  if (!budgetData[ci] || !budgetData[ci].items[ii]) return;
+  budgetData[ci].items[ii][field] = number(input.value);
+  saveData();
+  renderAll();
+});
+
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click",() => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(budgetData,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Dhanushka_Sawmiya_Wedding_Budget_Backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+}
+function importData() {
+  const file = document.getElementById("importFile").files[0];
+  if (!file) {
+    alert("Please select a JSON backup file first.");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      let normalized = parsed;
+
+      // Support the original flat budget format as well as this version.
+      if (Array.isArray(parsed) && parsed[0] && parsed[0].type) {
+        normalized = [];
+        let current = null;
+        parsed.forEach(row => {
+          if (row.type === "category") {
+            current = {category:row.name,items:[]};
+            normalized.push(current);
+          } else if (row.type === "item" && current) {
+            current.items.push({
+              id:row.id || "item",
+              name:row.name,
+              est:number(row.est),
+              act:number(row.act),
+              paid:number(row.paid)
+            });
+          }
+        });
+      }
+
+      if (!validateData(normalized)) throw new Error("Invalid backup format");
+      budgetData = normalized.map(cat => ({
+        category:cat.category,
+        items:cat.items.map(item => ({
+          id:item.id || "item",
+          name:item.name,
+          est:number(item.est),
+          act:number(item.act),
+          paid:number(item.paid)
+        }))
+      }));
+      saveData();
+      renderAll();
+      alert("Wedding budget backup restored successfully.");
+    } catch(e) {
+      alert("Could not import this file. Please select a valid wedding budget JSON backup.");
+    }
+  };
+  reader.readAsText(file);
+}
+function resetDefaults() {
+  if (!confirm("Reset all budget details to the original estimated values? Download a backup first if you need to keep your current changes.")) return;
+  budgetData = cloneDefaults();
+  saveData();
+  renderAll();
+  alert("The original budget has been restored.");
+}
+
+renderAll();
+</script>
+</body>
+</html>
